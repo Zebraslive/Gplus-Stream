@@ -38,4 +38,23 @@ function googleplus($link) {
  		return $source;
 	}
 }
+function posterimg($url, $size = "1280,720") { //poster size width,height
+$internalErrors = libxml_use_internal_errors(true);
+$ch = curl_init();
+$timeout = 30;
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+$html = curl_exec($ch);
+curl_close($ch);
+$sizes = explode(",",$size);
+$dom = new DOMDocument();
+@$dom->loadHTML($html);
+libxml_use_internal_errors($internalErrors);
+$idxki = 0;
+$imgx = "";
+foreach($dom->getElementsByTagName('img') as $element) { if ($idxki == 1) {$imgx = $element->getAttribute('src'); break;} $idxki++; }
+$xim = str_replace("=w852-h480-k-no","=w".$sizes[0]."-h".$sizes[1]."-no",$imgx);
+return $xim;    
+}
 ?>
